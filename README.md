@@ -1,4 +1,4 @@
-# 0.12Upgrade-Sources
+# 0.12upgrade-sources
 
 ## Description
 This docker image will upgrade the Terraform code in your application
