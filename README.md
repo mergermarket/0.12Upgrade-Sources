@@ -15,4 +15,4 @@ Run from the top level directory of your application
 
 
 ## Limitations
-This only works on `tf` files in the `infra` directory 
+Your Terraform files have to be in an `infra` directory
