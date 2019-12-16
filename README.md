@@ -3,7 +3,7 @@
 ## Description
 This docker image will upgrade the Terraform code in your application
 
-## How to Us
+## How to Use
 Run from the top level directory of your application
 `docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12Upgrade-Sources`
 
