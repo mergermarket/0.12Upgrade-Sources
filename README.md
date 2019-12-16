@@ -1,11 +1,11 @@
-* 0.12Upgrade-Sources
+# 0.12Upgrade-Sources
 
-** Description
+## Description
 This docker image will upgrade the Terraform code in your application
 
-** How to Us
+## How to Us
 Run from the top level directory of your application
 `docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12Upgrade-Sources`
 
-** Limitations
+## Limitations
 This only works on `tf` files in the `infra` directory 
