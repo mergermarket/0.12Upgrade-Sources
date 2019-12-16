@@ -11,7 +11,7 @@ All the code in your application will be migrated to Terraform 0.12
 ## How to Use
 Run from the top level directory of your application
 
-   `docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12Upgrade-Sources`
+   `docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12upgrade-sources`
 
 
 ## Limitations
