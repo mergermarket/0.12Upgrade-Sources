@@ -11,12 +11,23 @@ All the code in your application will be migrated to Terraform 0.12
 ## How to Use
 Run from the top level directory of your application
 
-   `docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12upgrade-sources`
-   
-   `git add infra/version.tf`
+      docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12upgrade-sources  
+      git add infra/version.tf 
    
 Now you can commit and push the changes
 
 
 ## Limitations
 Your Terraform files have to be in an `infra` directory
+
+
+## Gotchas
+* You will need to remove any fixed versions of AWS modules, ie. delete the version line in the example below  
+        `source  = "terraform-aws-modules/vpc/aws"`
+        `version = "1.46.0"`
+* Any `ignore_changes` in the lifecycle sections need to be a list of non quoted strings, ie.
+ ``` 
+      lifecycle {
+         create_before_destroy = true
+         ignore_changes        = [static_routes_only]
+      }
