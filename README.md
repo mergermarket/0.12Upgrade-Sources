@@ -41,7 +41,7 @@ Your Terraform files have to be in an `infra` directory
         module.vpc.private_route_table_ids,
      )]
   ```
-  should be 
+      should be 
   ```HCL
      route_table_ids = concat(
         module.vpc.public_route_table_ids,
