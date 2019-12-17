@@ -33,3 +33,18 @@ Your Terraform files have to be in an `infra` directory
          create_before_destroy = true
          ignore_changes        = [static_routes_only]
       }
+```
+* Wrapping `concat` and `split` with square brackets is no longer required. ie,
+```HCL
+     route_table_ids = [concat(
+        module.vpc.public_route_table_ids,
+        module.vpc.private_route_table_ids,
+     )]
+  ```
+  should be 
+  ```HCL
+     route_table_ids = concat(
+        module.vpc.public_route_table_ids,
+        module.vpc.private_route_table_ids,
+     )
+  ```
