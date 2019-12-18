@@ -41,11 +41,15 @@ Your Terraform files have to be in an `infra` directory
         module.vpc.private_route_table_ids,
      )]
   ```
-  should be 
-       
+  should be     
   ```HCL
      route_table_ids = concat(
         module.vpc.public_route_table_ids,
         module.vpc.private_route_table_ids,
      )
   ```
+* Any module sources that are local to the module must begin with either ./ or ../.  With versions 0.11 you didn't need the dots and slashes. So . 
+`   source = "vpc_setup"`
+needs to be changed to  
+`   source = "./vpc_setup"`
+ 
