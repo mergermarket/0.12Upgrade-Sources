@@ -7,7 +7,7 @@ from python_terraform import *
 
 
 def get_registry_module(module_name):
-    resp = requests.get(f"https://registry.terraform.io/v1/modules/mergermarket/ecs-service")
+    resp = requests.get(f"https://registry.terraform.io/v1/modules/mergermarket/{module_name}")
     if resp.status_code != 200:
         print('GET /tasks/ {}'.format(resp.status_code))
         raise Exception("Api Error")
@@ -25,7 +25,8 @@ def convert_module_name(line):
     no_quotes = module_name.replace('"', '')
     change_underscores = no_quotes.replace('_', '-')
     no_cr = change_underscores.rstrip()
-    return no_cr
+    no_refs = no_cr.replace('?ref=', '-')
+    return no_refs
 
 
 def scan_file(file_name):
@@ -40,6 +41,11 @@ def scan_file(file_name):
             print(f"{name}:{version}")
             new_lines.append(f'source = "{name}"\n')
             new_lines.append(f'version = "{version}"\n')
+        elif re.match(
+            r".*source.*=.*", line) and not re.match(
+            r".*mergermarket", line) and not re.match(
+            r"=.*\"\./", line):
+            print(f"HELLO:{line}")
         else:
             new_lines.append(line)    
     temp.writelines(new_lines)
