@@ -57,14 +57,20 @@ def scan_file(file_name):
 
 def main():
     for root, _, files in os.walk("./infra"):
+        print(f"root:{root}")
+
         for file in files:
             if file.endswith(".tf"):
                 scan_file(os.path.join(root, file))
-    
-    t = Terraform(working_dir='./infra')
-    t.cmd('version', capture_output=False)
-    t.cmd('fmt', capture_output=False)
-    t.cmd('init', capture_output=False)
-    t.cmd('0.12upgrade', '-yes', capture_output=False)
+
+        if not os.path.exists(f'{root}/versions.tf'):
+            print(f"RUN HERE:{root}")
+            t = Terraform(working_dir=f'{root}')
+            t.cmd('version', capture_output=False)
+            t.cmd('fmt', capture_output=False)
+            t.cmd('init', capture_output=False)
+            t.cmd('0.12upgrade', '-yes', capture_output=False)
+
+        print("===============")
 
 main()
