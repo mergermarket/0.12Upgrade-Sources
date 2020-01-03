@@ -54,6 +54,12 @@ def scan_file(file_name):
     temp.close()
     shutil.copy(temp.name, file_name)
 
+def add_terraform_version():
+    with open('./cdflow.yml', 'r+') as cdflowyml:
+        text = cdflowyml.read()
+        if not re.search(r'.*terraform-version:.*', text):
+            cdflowyml.write('\nterraform-version: 0.12.18')
+        cdflowyml.close()
 
 def main():
     for root, _, files in os.walk("./infra"):
@@ -64,13 +70,14 @@ def main():
                 scan_file(os.path.join(root, file))
 
         if not os.path.exists(f'{root}/versions.tf'):
-            print(f"RUN HERE:{root}")
+            print(f"Upgrading files in {root}")
             t = Terraform(working_dir=f'{root}')
             t.cmd('version', capture_output=False)
             t.cmd('fmt', capture_output=False)
             t.cmd('init', capture_output=False)
             t.cmd('0.12upgrade', '-yes', capture_output=False)
+            shutil.rmtree(f'{root}/.terraform')
+    add_terraform_version()
 
-        print("===============")
 
 main()

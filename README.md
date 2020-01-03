@@ -12,7 +12,7 @@ All the code in your application will be migrated to Terraform 0.12
 Run from the top level directory of your application
 ```shell
 docker container run --rm -v $(pwd):$(pwd) -w $(pwd) mergermarket/0.12upgrade-sources  
-git add infra/version.tf 
+git add infra/versions.tf 
 ```   
 Now you can commit and push the changes
 
