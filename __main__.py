@@ -77,6 +77,7 @@ def main():
             t.cmd('init', capture_output=False)
             t.cmd('0.12upgrade', '-yes', capture_output=False)
             shutil.rmtree(f'{root}/.terraform')
+
     add_terraform_version()
 
 

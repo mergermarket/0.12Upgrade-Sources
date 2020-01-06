@@ -27,13 +27,15 @@ Your Terraform files have to be in an `infra` directory
      source  = "terraform-aws-modules/vpc/aws"`
      version = "1.46.0"
 ```
+&nbsp;
 * Any `ignore_changes` in the lifecycle sections need to be a list of non quoted strings, ie.
  ```HCL 
       lifecycle {
          create_before_destroy = true
          ignore_changes        = [static_routes_only]
       }
-```
+ ```
+&nbsp;
 * Wrapping `concat` and `split` with square brackets is no longer required. ie,
 ```HCL
      route_table_ids = [concat(
@@ -41,15 +43,43 @@ Your Terraform files have to be in an `infra` directory
         module.vpc.private_route_table_ids,
      )]
   ```
-  should be     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  should be     
   ```HCL
-     route_table_ids = concat(
-        module.vpc.public_route_table_ids,
-        module.vpc.private_route_table_ids,
-     )
+       route_table_ids = concat(
+          module.vpc.public_route_table_ids,
+          module.vpc.private_route_table_ids,
+       )
+  ```  
+&nbsp;
+* How we use `count` can cause problems....  
+&nbsp;
+  NOTE making these changes will destroy and recrearte all of the resources created using the 'count'. It is much better to have the resources managed using the `for_each` due to the issues with the array in the state files         
+&nbsp;
+  *  In v0.12+ count needs to be a number, if your code tries to use a bollean to set count to either 1 or 0 it will fail. 
+  Solution is to use the boolean to return a 1 or a zero, i.e.  
+  ```HCL
+     count = var.enabled ? 1 : 0
   ```
-* Any module sources that are local to the module must begin with either ./ or ../.  With versions 0.11 you didn't need the dots and slashes. So   
-`   source = "vpc_setup"`  
-needs to be changed to  
-`   source = "./vpc_setup"`
- 
+  * You used to be able to use count.index on a set (i.e. whats returned from data.aws_route_tables) 
+  ```HCL
+      data "aws_route_tables" "routetables" {
+        provider = "aws.vpc"
+        vpc_id   = "${data.aws_vpc.vpc.id}"
+      }
+
+      resource "aws_route" "tgw_routes" {
+        count                  = "${length(data.aws_route_tables.routetables.ids)}"
+        route_table_id         = "${data.aws_route_tables.routetables.ids[count.index]}"  
+  ```  
+
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With Terrform 0.12 this is no longer possible but you can use the new `for_each`
+  ```HCL
+       data "aws_route_tables" "routetables" {
+         provider = aws.vpc
+         vpc_id   = data.aws_vpc.vpc.id
+       }
+
+       resource "aws_route" "tgw_routes" {
+         for_each               = data.aws_route_tables.routetables.ids
+         route_table_id         = each.value
+      
