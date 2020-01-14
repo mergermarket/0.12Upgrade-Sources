@@ -41,11 +41,8 @@ def scan_file(file_name):
             print(f"{name}:{version}")
             new_lines.append(f'source = "{name}"\n')
             new_lines.append(f'version = "{version}"\n')
-        elif re.match(
-            r".*\ssource\s=.*", line) and not re.match(
-            r".*mergermarket.*", line) and not bool(re.match(
-            r'.*source\s=\s"\.\/.*', line)):
-            new_lines.append(re.sub(r'source\s=\s"', 'source = "./', line))    
+        elif re.match(r"\s*source\s*=\s*", line) and not re.match(r".*mergermarket.*", line) and not re.match(r'.*source\s*=\s*"\.\/.*', line):
+            new_lines.append(re.sub(r'source\s*=\s*"', 'source = "./', line))    
         else:
             new_lines.append(line)    
     temp.writelines(new_lines)

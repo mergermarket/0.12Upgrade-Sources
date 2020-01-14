@@ -1,6 +1,6 @@
 FROM python
 
-ENV TERRAFORM_VERSION=0.12.18
+ENV TERRAFORM_VERSION=0.12.19
 ENV TERRAFORM_PLUGIN_DIR=/root/.terraform.d/plugins/
 
 RUN mkdir -p "${TERRAFORM_PLUGIN_DIR}" && cd /tmp && \
